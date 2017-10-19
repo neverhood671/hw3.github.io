@@ -31,7 +31,7 @@ class BarChart {
     // Create the axes (hint: use #xAxis and #yAxis)
 
     // Create the bars (hint: use #bars)
-     d3.selectAll(".bar").remove()
+    d3.selectAll(".bar").remove()
 
     var sortedData = sortData(data, "year");
 
@@ -42,6 +42,7 @@ class BarChart {
       .attr("width", width)
       .attr("height", height)
       .attr("transform", "translate(0,70)");
+
 
     var xScale = d3.scaleBand().range([0, width - margin]).padding(0.4),
       yScale = d3.scaleLinear().range([height - margin, 0]);
@@ -69,7 +70,7 @@ class BarChart {
       .attr("y", 6)
       .attr("dy", "0.71em")
       .attr("text-anchor", "end")
-      .text("goals");
+      .text("value");
 
     svg.selectAll("#bars")
       .data(sortedData)
@@ -83,9 +84,22 @@ class BarChart {
       })
       .attr("width", xScale.bandwidth())
       .attr("height", function(d) {
-        return height - yScale(d.goals);
+        return height - yScale(d[selectedDimension]);
       })
       .attr("transform", "translate(37,-50)");
+
+    var maxVal = 0;
+    for (var i = 0; i < sortedData.length; i++) {
+      if (maxVal < sortedData[i][selectedDimension]) {
+        maxVal = sortedData[i][selectedDimension];
+      }
+    }
+
+    d3.selectAll("rect")
+      .style("fill", function(d) {
+        var k = 255 - 255 * d[selectedDimension] / maxVal + 20;
+        return "rgb(0,0," + ~~k + ")"
+      })
 
 
 
