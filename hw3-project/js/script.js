@@ -1,3 +1,5 @@
+var data;
+
 
 // Load CSV file
 d3.csv("data/fifa-world-cup.csv", function (error, allData) {
@@ -17,6 +19,8 @@ d3.csv("data/fifa-world-cup.csv", function (error, allData) {
         d.teams_iso = d3.csvParse(d.TEAM_LIST).columns;
         d.teams_names = d3.csvParse(d.TEAM_NAMES).columns;
     });
+
+    data = allData;
 
     /* Create infoPanel, barChart and Map objects  */
     let infoPanel = new InfoPanel();
@@ -47,4 +51,27 @@ function chooseData() {
     // Changed the selected data when a user selects a different
     // menu item from the drop down.
 
+}
+
+function sortData(data, sortByParam) {
+  switch (sortByParam) {
+    case "year":
+      data.sort(sortByKey("year"));
+      break;
+  }
+  return data;
+}
+
+function sortByKey(key, reverse) {
+  var moveSmaller = reverse ? 1 : -1;
+  var moveLarger = reverse ? -1 : 1;
+  return function(a, b) {
+    if (a[key] < b[key]) {
+      return moveSmaller;
+    }
+    if (a[key] > b[key]) {
+      return moveLarger;
+    }
+    return 0;
+  };
 }
