@@ -31,6 +31,7 @@ class BarChart {
     // Create the axes (hint: use #xAxis and #yAxis)
 
     // Create the bars (hint: use #bars)
+     d3.selectAll(".bar").remove()
 
     var sortedData = sortData(data, "year");
 
@@ -41,8 +42,6 @@ class BarChart {
       .attr("width", width)
       .attr("height", height)
       .attr("transform", "translate(0,70)");
-
-
 
     var xScale = d3.scaleBand().range([0, width - margin]).padding(0.4),
       yScale = d3.scaleLinear().range([height - margin, 0]);
@@ -73,14 +72,20 @@ class BarChart {
       .text("goals");
 
     svg.selectAll("#bars")
-           .data(sortedData)
-           .enter().append("rect")
-           .attr("class", "bar")
-           .attr("x", function(d) { return xScale(d.year); })
-           .attr("y", function(d) { return yScale(d.goals); })
-           .attr("width", xScale.bandwidth())
-           .attr("height", function(d) { return height - yScale(d.goals); })
-           .attr("transform", "translate(37,-50)");
+      .data(sortedData)
+      .enter().append("rect")
+      .attr("class", "bar")
+      .attr("x", function(d) {
+        return xScale(d.year);
+      })
+      .attr("y", function(d) {
+        return yScale(d[selectedDimension]);
+      })
+      .attr("width", xScale.bandwidth())
+      .attr("height", function(d) {
+        return height - yScale(d.goals);
+      })
+      .attr("transform", "translate(37,-50)");
 
 
 
@@ -103,9 +108,6 @@ class BarChart {
    *  goals, matches, attendance and teams.
    */
   chooseData() {
-    // ******* TODO: PART I *******
-    //Changed the selected data when a user selects a different
-    // menu item from the drop down.
 
   }
 }
