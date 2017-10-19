@@ -40,6 +40,7 @@ class BarChart {
     var svg = d3.select("#barChart")
       .attr("width", width)
       .attr("height", height)
+      .attr("transform", "translate(0,70)");
 
 
 
@@ -70,6 +71,16 @@ class BarChart {
       .attr("dy", "0.71em")
       .attr("text-anchor", "end")
       .text("goals");
+
+    svg.selectAll("#bars")
+           .data(sortedData)
+           .enter().append("rect")
+           .attr("class", "bar")
+           .attr("x", function(d) { return xScale(d.year); })
+           .attr("y", function(d) { return yScale(d.goals); })
+           .attr("width", xScale.bandwidth())
+           .attr("height", function(d) { return height - yScale(d.goals); })
+           .attr("transform", "translate(37,-50)");
 
 
 
