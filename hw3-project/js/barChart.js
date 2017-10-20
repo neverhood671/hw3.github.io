@@ -25,16 +25,6 @@ class BarChart {
    */
   updateBarChart(selectedDimension) {
 
-    // ******* TODO: PART I *******
-    // Create the x and y scales; make
-    // sure to leave room for the axes
-
-    // Create colorScale
-
-    // Create the axes (hint: use #xAxis and #yAxis)
-
-    // Create the bars (hint: use #bars)
-
     d3.selectAll(".bar").remove()
 
     var svg = d3.select("#barChart")
@@ -94,16 +84,12 @@ class BarChart {
     var maxVal = findMaxVal(this.sortedData);
 
     d3.selectAll("rect")
-      .transition(2500)
       .style("fill", function(d) {
         if (d) {
           var k = 255 - 255 * d.value / maxVal + 20;
           return "rgb(0,0," + ~~k + ")";
         }
       });
-
-
-
     // ******* TODO: PART II *******
 
     // Implement how the bars respond to click events
@@ -164,6 +150,5 @@ class BarChart {
           return "rgb(0,0," + ~~k + ")";
         }
       });
-
   }
 }

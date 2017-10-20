@@ -1,43 +1,42 @@
 var data;
 
-
 // Load CSV file
-d3.csv("data/fifa-world-cup.csv", function (error, allData) {
-    allData.forEach(function (d) {
-        // Convert numeric values to 'numbers'
-        d.year = +d.YEAR;
-        d.teams = +d.TEAMS;
-        d.matches = +d.MATCHES;
-        d.goals = +d.GOALS;
-        d.avg_goals = +d.AVERAGE_GOALS;
-        d.attendance = +d.AVERAGE_ATTENDANCE;
-        // Lat and Lons of gold and silver medals teams
-        d.win_pos = [+d.WIN_LON, +d.WIN_LAT];
-        d.ru_pos = [+d.RUP_LON, +d.RUP_LAT];
+d3.csv("data/fifa-world-cup.csv", function(error, allData) {
+  allData.forEach(function(d) {
+    // Convert numeric values to 'numbers'
+    d.year = +d.YEAR;
+    d.teams = +d.TEAMS;
+    d.matches = +d.MATCHES;
+    d.goals = +d.GOALS;
+    d.avg_goals = +d.AVERAGE_GOALS;
+    d.attendance = +d.AVERAGE_ATTENDANCE;
+    // Lat and Lons of gold and silver medals teams
+    d.win_pos = [+d.WIN_LON, +d.WIN_LAT];
+    d.ru_pos = [+d.RUP_LON, +d.RUP_LAT];
 
-        //Break up lists into javascript arrays
-        d.teams_iso = d3.csvParse(d.TEAM_LIST).columns;
-        d.teams_names = d3.csvParse(d.TEAM_NAMES).columns;
-    });
+    //Break up lists into javascript arrays
+    d.teams_iso = d3.csvParse(d.TEAM_LIST).columns;
+    d.teams_names = d3.csvParse(d.TEAM_NAMES).columns;
+  });
 
-    data = allData;
+  data = allData;
 
-    /* Create infoPanel, barChart and Map objects  */
-    let infoPanel = new InfoPanel();
-    let worldMap = new Map();
+  /* Create infoPanel, barChart and Map objects  */
+  let infoPanel = new InfoPanel();
+  let worldMap = new Map();
 
-    /* DATA LOADING */
-    //Load in json data to make map
-    d3.json("data/world.json", function (error, world) {
-        if (error) throw error;
-        worldMap.drawMap(world);
-    });
+  /* DATA LOADING */
+  //Load in json data to make map
+  d3.json("data/world.json", function(error, world) {
+    if (error) throw error;
+    worldMap.drawMap(world);
+  });
 
-    // Define this as a global variable
-    window.barChart = new BarChart(worldMap, infoPanel, allData);
+  // Define this as a global variable
+  window.barChart = new BarChart(worldMap, infoPanel, allData);
 
-    // Draw the Bar chart for the first time
-    barChart.updateBarChart('attendance');
+  // Draw the Bar chart for the first time
+  barChart.updateBarChart('attendance');
 });
 
 /**
@@ -47,11 +46,8 @@ d3.csv("data/fifa-world-cup.csv", function (error, allData) {
  *  goals, matches, attendance and teams.
  */
 function chooseData() {
-    // ******* TODO: PART I *******
-    // Changed the selected data when a user selects a different
-    // menu item from the drop down.
-    var dimension = d3.select("#dataset").property("value");
-    barChart.chooseData(dimension);
+  var dimension = d3.select("#dataset").property("value");
+  barChart.chooseData(dimension);
 }
 
 function sortData(data, sortByParam) {
@@ -70,9 +66,9 @@ function sortByKey(key, reverse) {
     if (a === null && b === null)
       return 0;
     if (a === null)
-        return moveSmaller;
+      return moveSmaller;
     if (b === null)
-        return moveLarger;
+      return moveLarger;
     if (a[key] < b[key]) {
       return moveSmaller;
     }
@@ -83,9 +79,9 @@ function sortByKey(key, reverse) {
   };
 }
 
-function getCurrentData(data, selectedDimension){
+function getCurrentData(data, selectedDimension) {
   var currentData = [];
-  for(var j = 0; j < data.length; j++){
+  for (var j = 0; j < data.length; j++) {
     currentData[j] = {
       year: data[j].year,
       value: data[j][selectedDimension]
@@ -95,16 +91,16 @@ function getCurrentData(data, selectedDimension){
 }
 
 
-function getDataByYear(data, year){
+function getDataByYear(data, year) {
   var i = 0
-  while((data[i].year != year) && (i < data.length)){
+  while ((data[i].year != year) && (i < data.length)) {
     i++;
   }
   return data[i];
 }
 
 
-function findMaxVal(data){
+function findMaxVal(data) {
   var maxVal = 0;
   for (var i = 0; i < data.length; i++) {
     if (maxVal < data[i].value) {
