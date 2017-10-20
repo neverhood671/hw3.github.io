@@ -87,7 +87,7 @@ class BarChart {
     d3.selectAll("rect")
       .style("fill", function(d) {
         if (d) {
-          var k = 255 - 255 * d.value / maxVal + 20;
+          var k = 255 - 255 * d.value / maxVal + 60;
           return "rgb(0,0," + ~~k + ")";
         }
       })
@@ -98,13 +98,13 @@ class BarChart {
         d3.selectAll("rect")
           .style("fill", function(d) {
             if (d) {
-              var k = 255 - 255 * d.value / maxVal + 20;
+              var k = 255 - 255 * d.value / maxVal +60;
               return "rgb(0,0," + ~~k + ")";
             }
           });
       })
       .on('click', function(d) {
-        var a = 0;
+        updateInfoPanel(d.year);
       });
     // ******* TODO: PART II *******
 
@@ -162,7 +162,7 @@ class BarChart {
       .transition(2500)
       .style("fill", function(d) {
         if (d) {
-          var k = 255 - 255 * d.value / maxVal + 20;
+          var k = 255 - 255 * d.value / maxVal + 60;
           return "rgb(0,0," + ~~k + ")";
         }
       });

@@ -109,3 +109,35 @@ function findMaxVal(data) {
   }
   return maxVal;
 }
+
+function updateInfoPanel(year){
+  var dataForSelectedBar = getDataByYear(data, year);
+
+  d3.selectAll(".text_label").remove();
+
+  d3.select("#host")
+  .append("text")
+  .attr('class', 'text_label')
+  .text(dataForSelectedBar.host);
+
+  d3.select("#winner")
+  .append("text")
+  .attr('class', 'text_label')
+  .text(dataForSelectedBar.winner);
+
+  d3.select("#silver")
+  .append("text")
+  .attr('class', 'text_label')
+  .text(dataForSelectedBar.runner_up);
+
+  for (var k = 0; k < dataForSelectedBar.teams; k++){
+    d3.select("#teams")
+    .append("div")
+    .append("text")
+    .attr('class', 'text_label')
+    .text( dataForSelectedBar.teams_names[k])
+
+  }
+
+
+}
