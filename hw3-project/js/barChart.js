@@ -73,8 +73,10 @@ class BarChart {
       .text("value");
 
     svg.selectAll("#bars")
+      .selectAll("rect") //TODO
       .data(sortedData)
-      .enter().append("rect")
+      .enter()
+      .append("rect")
       .attr("class", "bar")
       .attr("x", function(d) {
         return xScale(d.year);
@@ -86,7 +88,7 @@ class BarChart {
       .attr("height", function(d) {
         return height - yScale(d[selectedDimension]);
       })
-      .attr("transform", "translate(37,-50)");
+      .attr("transform", "translate(60,-50)");
 
     var maxVal = 0;
     for (var i = 0; i < sortedData.length; i++) {
@@ -95,10 +97,12 @@ class BarChart {
       }
     }
 
+    var t = 0;
     d3.selectAll("rect")
       .style("fill", function(d) {
+        t++;
         var k = 255 - 255 * d[selectedDimension] / maxVal + 20;
-        return "rgb(0,0," + ~~k + ")"
+        return "rgb(0,0," + ~~k + ")";
       })
 
 

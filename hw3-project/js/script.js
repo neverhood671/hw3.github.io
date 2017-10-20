@@ -68,6 +68,12 @@ function sortByKey(key, reverse) {
   var moveSmaller = reverse ? 1 : -1;
   var moveLarger = reverse ? -1 : 1;
   return function(a, b) {
+    if (a === null && b === null)
+      return 0;
+    if (a === null)
+        return moveSmaller;
+    if (b === null)
+        return moveLarger;
     if (a[key] < b[key]) {
       return moveSmaller;
     }
