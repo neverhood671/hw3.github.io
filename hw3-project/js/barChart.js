@@ -1,4 +1,8 @@
 /** Class implementing the bar chart view. */
+var margin = 50;
+var width = 500;
+var height = 400;
+
 class BarChart {
 
   /**
@@ -11,6 +15,9 @@ class BarChart {
     this.worldMap = worldMap;
     this.infoPanel = infoPanel;
     this.allData = allData;
+    this.sortedData = sortData(getCurrentData(data, 'attendance'), "year");
+    this.xScale;
+    this.yScale;
   }
 
   /**
@@ -18,11 +25,7 @@ class BarChart {
    */
   updateBarChart(selectedDimension) {
 
-
-
     // ******* TODO: PART I *******
-
-
     // Create the x and y scales; make
     // sure to leave room for the axes
 
@@ -31,39 +34,35 @@ class BarChart {
     // Create the axes (hint: use #xAxis and #yAxis)
 
     // Create the bars (hint: use #bars)
+
     d3.selectAll(".bar").remove()
 
-    var sortedData = sortData(data, "year");
-
-    var margin = 50;
-    var width = 500;
-    var height = 400;
     var svg = d3.select("#barChart")
       .attr("width", width)
       .attr("height", height)
       .attr("transform", "translate(0,70)");
 
+    this.xScale = d3.scaleBand().range([0, width - margin]).padding(0.4);
+    this.yScale = d3.scaleLinear().range([height - margin, 0]);
 
-    var xScale = d3.scaleBand().range([0, width - margin]).padding(0.4),
-      yScale = d3.scaleLinear().range([height - margin, 0]);
-
-    xScale.domain(sortedData.map(function(d) {
+    var self = this;
+    this.xScale.domain(self.sortedData.map(function(d) {
       return d.year;
     }));
-    yScale.domain([0, d3.max(sortedData, function(d) {
-      return d.goals;
+    this.yScale.domain([0, d3.max(self.sortedData, function(d) {
+      return d.value;
     })]);
 
     svg.select("#xAxis")
       .attr("transform", "translate(60," + (height - margin) + ")")
-      .call(d3.axisBottom(xScale));
+      .call(d3.axisBottom(self.xScale));
 
     svg.select("#xAxis").selectAll("text")
       .style("transform", "rotate(270deg) translate(-35px,-15px)");
 
     svg.select("#yAxis")
       .attr("transform", "translate(60,0)")
-      .call(d3.axisLeft(yScale).tickFormat(function(d) {
+      .call(d3.axisLeft(self.yScale).tickFormat(function(d) {
         return d;
       }).ticks(10))
       .append("text")
@@ -74,37 +73,34 @@ class BarChart {
 
     svg.selectAll("#bars")
       .selectAll("rect") //TODO
-      .data(sortedData)
+      .data(self.sortedData)
       .enter()
       .append("rect")
       .attr("class", "bar")
       .attr("x", function(d) {
-        return xScale(d.year);
-      })
+        return self.xScale(d.year);
+      });
+
+    d3.selectAll("rect.bar")
       .attr("y", function(d) {
-        return yScale(d[selectedDimension]);
+        return self.yScale(d.value);
       })
-      .attr("width", xScale.bandwidth())
+      .attr("width", self.xScale.bandwidth())
       .attr("height", function(d) {
-        return height - yScale(d[selectedDimension]);
+        return height - self.yScale(d.value);
       })
       .attr("transform", "translate(60,-50)");
 
-    var maxVal = 0;
-    for (var i = 0; i < sortedData.length; i++) {
-      if (maxVal < sortedData[i][selectedDimension]) {
-        maxVal = sortedData[i][selectedDimension];
-      }
-    }
+    var maxVal = findMaxVal(this.sortedData);
 
-    var t = 0;
     d3.selectAll("rect")
+      .transition(2500)
       .style("fill", function(d) {
-        t++;
-        var k = 255 - 255 * d[selectedDimension] / maxVal + 20;
-        return "rgb(0,0," + ~~k + ")";
-      })
-
+        if (d) {
+          var k = 255 - 255 * d.value / maxVal + 20;
+          return "rgb(0,0," + ~~k + ")";
+        }
+      });
 
 
 
@@ -125,7 +121,49 @@ class BarChart {
    *  There are 4 attributes that can be selected:
    *  goals, matches, attendance and teams.
    */
-  chooseData() {
+  chooseData(selectedDimension) {
+    var self = this;
+    this.sortedData.forEach(function(d) {
+      var newSortedData = sortData(getCurrentData(data, selectedDimension), "year");
+      var newVal = getDataByYear(newSortedData, d.year)
+      d.value = newVal.value;
+    });
+
+    this.xScale.domain(self.sortedData.map(function(d) {
+      return d.year;
+    }));
+    this.yScale.domain([0, d3.max(self.sortedData, function(d) {
+      return d.value;
+    })]);
+
+    d3.selectAll("rect.bar")
+      .transition()
+      .duration(2500)
+      .attr('y', function(d) {
+        return self.yScale(d.value);
+      })
+      .attr('height', function(d) {
+        return height - self.yScale(d.value);
+      })
+
+    d3.select("#yAxis")
+      .transition()
+      .duration(2500)
+      .attr("transform", "translate(60,0)")
+      .call(d3.axisLeft(self.yScale).tickFormat(function(d) {
+        return d;
+      }).ticks(10));
+
+    var maxVal = findMaxVal(this.sortedData);
+
+    d3.selectAll("rect")
+      .transition(2500)
+      .style("fill", function(d) {
+        if (d) {
+          var k = 255 - 255 * d.value / maxVal + 20;
+          return "rgb(0,0," + ~~k + ")";
+        }
+      });
 
   }
 }

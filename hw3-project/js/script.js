@@ -51,8 +51,7 @@ function chooseData() {
     // Changed the selected data when a user selects a different
     // menu item from the drop down.
     var dimension = d3.select("#dataset").property("value");
-    barChart.updateBarChart(dimension);
-
+    barChart.chooseData(dimension);
 }
 
 function sortData(data, sortByParam) {
@@ -82,4 +81,35 @@ function sortByKey(key, reverse) {
     }
     return 0;
   };
+}
+
+function getCurrentData(data, selectedDimension){
+  var currentData = [];
+  for(var j = 0; j < data.length; j++){
+    currentData[j] = {
+      year: data[j].year,
+      value: data[j][selectedDimension]
+    };
+  }
+  return currentData;
+}
+
+
+function getDataByYear(data, year){
+  var i = 0
+  while((data[i].year != year) && (i < data.length)){
+    i++;
+  }
+  return data[i];
+}
+
+
+function findMaxVal(data){
+  var maxVal = 0;
+  for (var i = 0; i < data.length; i++) {
+    if (maxVal < data[i].value) {
+      maxVal = data[i].value;
+    }
+  }
+  return maxVal;
 }
