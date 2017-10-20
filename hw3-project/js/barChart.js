@@ -2,6 +2,7 @@
 var margin = 50;
 var width = 500;
 var height = 400;
+var maxVal;
 
 class BarChart {
 
@@ -81,7 +82,7 @@ class BarChart {
       })
       .attr("transform", "translate(60,-50)");
 
-    var maxVal = findMaxVal(this.sortedData);
+    maxVal = findMaxVal(this.sortedData);
 
     d3.selectAll("rect")
       .style("fill", function(d) {
@@ -89,6 +90,21 @@ class BarChart {
           var k = 255 - 255 * d.value / maxVal + 20;
           return "rgb(0,0," + ~~k + ")";
         }
+      })
+      .on('mouseover', function(d) {
+        d3.select(this).style("fill", "red");
+      })
+      .on('mouseout', function(d) {
+        d3.selectAll("rect")
+          .style("fill", function(d) {
+            if (d) {
+              var k = 255 - 255 * d.value / maxVal + 20;
+              return "rgb(0,0," + ~~k + ")";
+            }
+          });
+      })
+      .on('click', function(d) {
+        var a = 0;
       });
     // ******* TODO: PART II *******
 
@@ -140,7 +156,7 @@ class BarChart {
         return d;
       }).ticks(10));
 
-    var maxVal = findMaxVal(this.sortedData);
+    maxVal = findMaxVal(this.sortedData);
 
     d3.selectAll("rect")
       .transition(2500)
