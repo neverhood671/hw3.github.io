@@ -105,6 +105,7 @@ class BarChart {
       })
       .on('click', function(d) {
         self.infoPanel.updateInfo(d.year);
+        self.worldMap.updateMap(d.year);
       });
     // ******* TODO: PART II *******
 

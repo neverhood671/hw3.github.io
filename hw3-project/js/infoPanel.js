@@ -42,7 +42,7 @@ class InfoPanel {
     d3.select("#silver")
       .append("text")
       .attr('class', 'text_label')
-      .text(dataForSelectedBar.winner);
+      .text(dataForSelectedBar.runner_up);
 
     for (var k = 0; k < dataForSelectedBar.teams; k++) {
       d3.select("#teams")
