@@ -79,11 +79,17 @@ class Map {
           .attr("d", path);
 
     var countries = topojson.feature(world, world.objects.countries).features;
+
     var g = svg.append('g');
     svg.selectAll('.countries').data(countries).enter()
         .append('path')
         .attr('class', 'countries')
         .attr('d', path);
+
+        g.append('path')
+          .datum(d3.geoGraticule())
+          .attr('class', 'grat')
+          .attr('d', path);
   }
 
 
