@@ -104,7 +104,7 @@ class BarChart {
           });
       })
       .on('click', function(d) {
-        updateInfoPanel(d.year);
+        self.infoPanel.updateInfo(d.year);
       });
     // ******* TODO: PART II *******
 
