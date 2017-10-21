@@ -25,6 +25,10 @@ class InfoPanel {
 
     d3.selectAll(".text_label").remove();
 
+    d3.select("#edition")
+      .property('innerHTML', dataForSelectedBar.EDITION);
+
+
     d3.select("#host")
       .append("text")
       .attr('class', 'text_label')
