@@ -12,7 +12,8 @@ var extensions = {
   ".png" : "image/png",
   ".gif" : "image/gif",
   ".jpg" : "image/jpeg",
-  ".ttf" : "application/octet-stream"
+  ".ttf" : "application/octet-stream",
+  ".otf" : "application/octet-stream"
 };
 
 http.createServer(function(requset, response) {

@@ -63,7 +63,7 @@ class BarChart {
       .text("value");
 
     svg.selectAll("#bars")
-      .selectAll("rect") //TODO
+      .selectAll("rect")
       .data(self.sortedData)
       .enter()
       .append("rect")
