@@ -101,11 +101,22 @@
             return "chartCol";
           } else if (d.column == "Goals") {
             return "goalsCol";
+          } else if (d.column == "Team") {
+            return "teamCol";
           } else {
             return "simple"
           };
         })
         .text(function(d) {
+          return d.value;
+        });
+
+      d3.selectAll("#colHeaders").selectAll("td").attr("class", "colHeaders");
+      d3.selectAll(".simple").property("innerHTML", "");
+      d3.selectAll(".simple")
+        .append("div")
+        .style("width", "150px")
+        .property("innerHTML", function(d) {
           return d.value;
         });
 
@@ -153,7 +164,6 @@
         .classed("equal_score", function(d) {
           return d.value[0] == d.value[1] ? true : false;
         })
-
 
       d3.selectAll(".chartCol").property('innerHTML', "");
       d3.selectAll(".chartCol")
