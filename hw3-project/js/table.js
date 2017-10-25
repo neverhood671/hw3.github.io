@@ -1,146 +1,143 @@
+var width = 150;
+var height = 70;
+var margin = 35;
 
-var width = 500;
-var height = 100;
-var margin = 100;
+var columns = ["Team", "Goals", "Round/Result", "Wins", "Losses", "Total Games"];
 /** Class implementing the table. */
 class Table {
-    /**
-     * Creates a Table Object
-     */
-    constructor(teamData, treeObject) {
+  /**
+   * Creates a Table Object
+   */
+  constructor(teamData, treeObject) {
 
-        //Maintain reference to the tree Object;
-        this.tree = treeObject;
+    //Maintain reference to the tree Object;
+    this.tree = treeObject;
 
-        // Create list of all elements that will populate the table
-        // Initially, the tableElements will be identical to the teamData
-        this.tableElements = null; //
+    // Create list of all elements that will populate the table
+    // Initially, the tableElements will be identical to the teamData
+    this.tableElements = null; //
 
-        ///** Store all match data for the 2014 Fifa cup */
-        this.teamData = teamData;
+    ///** Store all match data for the 2014 Fifa cup */
+    this.teamData = teamData;
 
-        //Default values for the Table Headers
-        this.tableHeaders = ["Delta Goals", "Result", "Wins", "Losses", "TotalGames"];
+    //Default values for the Table Headers
+    this.tableHeaders = ["Delta Goals", "Result", "Wins", "Losses", "TotalGames"];
 
-        /** To be used when sizing the svgs in the table cells.*/
-        this.cell = {
-            "width": 70,
-            "height": 20,
-            "buffer": 15
-        };
-
-        this.bar = {
-            "height": 20
-        };
-
-        /** Set variables for commonly accessed data columns*/
-        this.goalsMadeHeader = 'Goals Made';
-        this.goalsConcededHeader = 'Goals Conceded';
-
-        /** Setup the scales*/
-        this.goalScale = null;
-
-        /** Used for games/wins/losses*/
-        this.gameScale = null;
-
-        /**Color scales*/
-        /**For aggregate columns  Use colors '#ece2f0', '#016450' for the range.*/
-        this.aggregateColorScale = null;
-
-        /**For goal Column. Use colors '#cb181d', '#034e7b'  for the range.*/
-        this.goalColorScale = null;
-    }
-
-
-    /**
-     * Creates a table skeleton including headers that when clicked allow you to sort the table by the chosen attribute.
-     * Also calculates aggregate values of goals, wins, losses and total games as a function of country.
-     *
-     */
-    createTable() {
-
-        // ******* TODO: PART II *******
-
-        //Update Scale Domains
-
-        // Create the x axes for the goalScale.
-
-        //add GoalAxis to header of col 1.
-        var svg = d3.select(".glyphicon").append("svg");
-
-         svg.attr("width", width)
-          .attr("height", height)
-          .attr("transform", "translate(0,70)");
-
-        var self = this;
-      //  var arr = getArrayOf(getMaxNumOfTeamGoals(this.teamData));
-        var xScale = d3.scaleLinear().range([0, width - margin])
-        .domain([0, getMaxNumOfTeamGoals(this.teamData)]);
-
-
-
-        svg.append("g");
-
-        svg.select("g")
-          .attr("transform", "translate(60," + (height - margin) + ")")
-          .call(d3.axisBottom(xScale));
-
-
-        // ******* TODO: PART V *******
-
-        // Set sorting callback for clicking on headers
-
-        // Clicking on headers should also trigger collapseList() and updateTable().
-
-
-
-
-
-    }
-
-
-    /**
-     * Updates the table contents with a row for each element in the global variable tableElements.
-     */
-    updateTable() {
-        // ******* TODO: PART III *******
-        //Create table rows
-
-        //Append th elements for the Team Names
-
-        //Append td elements for the remaining columns.
-        //Data for each cell is of the type: {'type':<'game' or 'aggregate'>, 'value':<[array of 1 or two elements]>}
-
-        //Add scores as title property to appear on hover
-
-        //Populate cells (do one type of cell at a time )
-
-        //Create diagrams in the goals column
-
-        //Set the color of all games that tied to light gray
-
+    /** To be used when sizing the svgs in the table cells.*/
+    this.cell = {
+      "width": 70,
+      "height": 20,
+      "buffer": 15
     };
 
-    /**
-     * Updates the global tableElements variable, with a row for each row to be rendered in the table.
-     *
-     */
-    updateList(i) {
-        // ******* TODO: PART IV *******
+    this.bar = {
+      "height": 20
+    };
 
-        //Only update list for aggregate clicks, not game clicks
+    /** Set variables for commonly accessed data columns*/
+    this.goalsMadeHeader = 'Goals Made';
+    this.goalsConcededHeader = 'Goals Conceded';
 
-    }
+    /** Setup the scales*/
+    this.goalScale = null;
 
-    /**
-     * Collapses all expanded countries, leaving only rows for aggregate values per country.
-     *
-     */
-    collapseList() {
+    /** Used for games/wins/losses*/
+    this.gameScale = null;
 
-        // ******* TODO: PART IV *******
+    /**Color scales*/
+    /**For aggregate columns  Use colors '#ece2f0', '#016450' for the range.*/
+    this.aggregateColorScale = null;
 
-    }
+    /**For goal Column. Use colors '#cb181d', '#034e7b'  for the range.*/
+    this.goalColorScale = null;
+  }
+
+
+  /**
+   * Creates a table skeleton including headers that when clicked allow you to sort the table by the chosen attribute.
+   * Also calculates aggregate values of goals, wins, losses and total games as a function of country.
+   *
+   */
+  createTable() {
+
+    // ******* TODO: PART II *******
+
+    //Update Scale Domains
+
+    // Create the x axes for the goalScale.
+
+    //add GoalAxis to header of col 1.
+    var svg = d3.select(".glyphicon").append("svg");
+
+    svg.attr("width", width + 30)
+      .attr("height", height)
+      .attr("transform", "translate(0,0)");
+
+    var self = this;
+    var xScale = d3.scaleLinear().range([0, width])
+      .domain([0, getMaxNumOfSomething(this.teamData, "goals")]);
+
+    svg.append("g");
+
+    svg.select("g")
+      .attr("transform", "translate(15," + margin + ")")
+      .call(d3.axisTop(xScale));
+
+    //var columns = d3.select("#colHeaders").selectAll("td");
+    tableInit(this.teamData, columns);
+
+    // ******* TODO: PART V *******
+
+    // Set sorting callback for clicking on headers
+
+    // Clicking on headers should also trigger collapseList() and updateTable().
+
+
+  }
+
+
+  /**
+   * Updates the table contents with a row for each element in the global variable tableElements.
+   */
+  updateTable() {
+    // ******* TODO: PART III *******
+    //Create table rows
+
+    //Append th elements for the Team Names
+
+    //Append td elements for the remaining columns.
+    //Data for each cell is of the type: {'type':<'game' or 'aggregate'>, 'value':<[array of 1 or two elements]>}
+
+    //Add scores as title property to appear on hover
+
+    //Populate cells (do one type of cell at a time )
+
+    //Create diagrams in the goals column
+
+    //Set the color of all games that tied to light gray
+
+  };
+
+  /**
+   * Updates the global tableElements variable, with a row for each row to be rendered in the table.
+   *
+   */
+  updateList(i) {
+    // ******* TODO: PART IV *******
+
+    //Only update list for aggregate clicks, not game clicks
+
+  }
+
+  /**
+   * Collapses all expanded countries, leaving only rows for aggregate values per country.
+   *
+   */
+  collapseList() {
+
+    // ******* TODO: PART IV *******
+
+  }
 
 
 }

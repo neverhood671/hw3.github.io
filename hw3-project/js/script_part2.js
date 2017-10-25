@@ -27,29 +27,127 @@
     });
 
 
-    function getMaxNumOfTeamGoals(teamData) {
+    function getMaxNumOfSomething(teamData, something) {
       var max = 0;
-      for (var k = 0; k < teamData.length; k++) {
-        if (max < teamData[k].value["Goals Conceded"]) {
-          max = teamData[k].value["Goals Conceded"]
+      if (something == "goals") {
+        for (var k = 0; k < teamData.length; k++) {
+          if (max < teamData[k].value["Goals Conceded"]) {
+            max = teamData[k].value["Goals Conceded"]
+          }
+          if (max < teamData[k].value["Goals Made"]) {
+            max = teamData[k].value["Goals Made"]
+          }
         }
-        if (max < teamData[k].value["Goals Made"]) {
-          max = teamData[k].value["Goals Made"]
+      } else {
+        for (var k = 0; k < teamData.length; k++) {
+          if (max < teamData[k].value["something"]) {
+            max = teamData[k].value["something"]
+          }
         }
       }
       return max;
     }
 
 
-    function getArrayOf(maxVal){
-      var res = [];
-      var k = 0;
-      res[0] = 0;
-      while (res[k] < maxVal){
-        k++;
-        res[k].push(res[k-1]+2);
+    function tableInit(data, columns) {
+      // var table = d3.select('body').append('table')
+      // var thead = table.append('thead')
+      var self = this;
+      var tbody = d3.select("#matchTable").select("tbody");
+
+      // create a row for each object in the data
+      var rows = tbody.selectAll('tr')
+        .data(data)
+        .enter()
+        .append('tr');
+
+      // create a cell in each row for each column
+      var cells = rows.selectAll('td')
+        .data(function(row) {
+          return columns.map(function(column) {
+            var value;
+            switch (column) {
+              case "Team":
+                value = row.key;
+                break;
+              case "Goals":
+                value = row.value["Goals Conceded"] + ":" + row.value["Goals Made"];
+                break;
+              case "Round/Result":
+                value = row.value["Result"]["label"];
+                break;
+              case "Wins":
+                value = row.value["Wins"];
+                break;
+              case "Losses":
+                value = row.value["Losses"];
+                break;
+              case "Total Games":
+                value = row.value["TotalGames"];
+                break;
+              default:
+                alert("Something wrong!");
+            }
+            return {
+              column: column,
+              value: value
+            };
+          });
+        })
+        .enter()
+        .append('td')
+        .attr("class", function(d) {
+          if (d.column == "Wins" || d.column == "Losses" || d.column == "Total Games") {
+            return "chartCol";
+          } else return "simple";
+        })
+        .text(function(d) {
+          return d.value;
+        });
+
+      d3.selectAll(".chartCol").property('innerHTML', "");
+      d3.selectAll(".chartCol")
+        .append("div")
+        .attr("class", "bar_container")
+        .append("div").attr("class", "chart")
+        .property('innerHTML', function(d) {
+          if (d.value > 0) {
+            return d.value;
+          } else {
+            return "";
+          }
+
+        });
+
+      //TODO: find max val
+      var maxVal = 10;
+
+      d3.selectAll(".chart")
+        .style("width", function(d) {
+          return (d.value * 10) + "px";
+        });
+
+      d3.selectAll(".chart")
+        .style("background-color",  function(d) {
+          if (d) {
+            var k = 100 - 80 *d.value / maxVal;
+            return "hsl(180,50%," + ~~k + "%)";
+          }
+        });
+
+    }
+
+
+
+
+    function findMaxVal(data) {
+      var maxVal = 0;
+      for (var i = 0; i < data.length; i++) {
+        if (maxVal < data[i].value) {
+          maxVal = data[i].value;
+        }
       }
-      return res;
+      return maxVal;
     }
 
 
