@@ -143,7 +143,6 @@ header {
 .selectedLabel {
     fill: #be2714;
     font-weight: bolder;
-
 }
 
 .view {
@@ -164,4 +163,16 @@ header {
 
 .bar_container {
   width: 150px;
+}
+
+.goal_chart {
+  height: 30px;
+}
+
+.made_goals {
+    fill: red;
+}
+
+.conceded_gols {
+   fill: blue;
 }

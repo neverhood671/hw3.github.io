@@ -71,7 +71,7 @@
                 value = row.key;
                 break;
               case "Goals":
-                value = row.value["Goals Conceded"] + ":" + row.value["Goals Made"];
+                value = [row.value["Goals Conceded"], row.value["Goals Made"]];
                 break;
               case "Round/Result":
                 value = row.value["Result"]["label"];
@@ -99,11 +99,56 @@
         .attr("class", function(d) {
           if (d.column == "Wins" || d.column == "Losses" || d.column == "Total Games") {
             return "chartCol";
-          } else return "simple";
+          } else if (d.column == "Goals") {
+            return "goalsCol";
+          } else {
+            return "simple"
+          };
         })
         .text(function(d) {
           return d.value;
         });
+
+      d3.selectAll(".goalsCol").property('innerHTML', "");
+      d3.selectAll(".goalsCol")
+        .append("div")
+        .attr("class", "bar_container")
+        .append("svg").attr("class", "goal_chart");
+
+
+      d3.selectAll(".goal_chart")
+        .append("rect")
+        .style("fill", function(d){
+          return d.value[0] < d.value[1] ? "#ff6666" : "#5faae3";
+        })
+        .attr("height", "16px")
+        .attr("width", function(d) {
+          return (8.6 * Math.abs(d.value[0] - d.value[1])) +"px";
+        })
+        .attr("x", function(d) {
+          var res = d.value[0] < d.value[1] ? d.value[0] : d.value[1];
+          return (8 + res * 8.6) + "px"
+        })
+        .attr("y", "7px");;
+
+      d3.selectAll(".goal_chart")
+        .append("circle")
+        .classed("made_goals", true)
+        .attr("r", "8px")
+        .attr("cx", function(d) {
+          return (8 + d.value[0] * 8.6) + "px";
+        })
+        .attr("cy", "15px");
+
+      d3.selectAll(".goal_chart")
+        .append("circle")
+        .classed("conceded_gols", true)
+        .attr("r", "8px")
+        .attr("cx", function(d) {
+          return (8 + d.value[1] * 8.6) + "px";
+        })
+        .attr("cy", "15px");
+
 
       d3.selectAll(".chartCol").property('innerHTML', "");
       d3.selectAll(".chartCol")
@@ -116,7 +161,6 @@
           } else {
             return "";
           }
-
         });
 
       //TODO: find max val
@@ -128,9 +172,9 @@
         });
 
       d3.selectAll(".chart")
-        .style("background-color",  function(d) {
+        .style("background-color", function(d) {
           if (d) {
-            var k = 100 - 80 *d.value / maxVal;
+            var k = 100 - 80 * d.value / maxVal;
             return "hsl(180,50%," + ~~k + "%)";
           }
         });
