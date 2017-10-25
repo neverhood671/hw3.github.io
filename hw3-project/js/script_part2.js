@@ -118,12 +118,12 @@
 
       d3.selectAll(".goal_chart")
         .append("rect")
-        .style("fill", function(d){
+        .style("fill", function(d) {
           return d.value[0] < d.value[1] ? "#ff6666" : "#5faae3";
         })
         .attr("height", "16px")
         .attr("width", function(d) {
-          return (8.6 * Math.abs(d.value[0] - d.value[1])) +"px";
+          return (8.6 * Math.abs(d.value[0] - d.value[1])) + "px";
         })
         .attr("x", function(d) {
           var res = d.value[0] < d.value[1] ? d.value[0] : d.value[1];
@@ -148,6 +148,11 @@
           return (8 + d.value[1] * 8.6) + "px";
         })
         .attr("cy", "15px");
+
+      d3.selectAll("circle")
+        .classed("equal_score", function(d) {
+          return d.value[0] == d.value[1] ? true : false;
+        })
 
 
       d3.selectAll(".chartCol").property('innerHTML', "");

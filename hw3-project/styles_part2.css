@@ -169,10 +169,15 @@ header {
   height: 30px;
 }
 
+
 .made_goals {
     fill: red;
 }
 
 .conceded_gols {
    fill: blue;
+}
+
+.equal_score {
+  fill: gray;
 }
