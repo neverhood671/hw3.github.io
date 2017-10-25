@@ -12,7 +12,7 @@ th {
 }
 
 thead td, th {
-  cursor: s-resize;
+  cursor: pointer;
 }
 
 tbody tr:first-child td {
@@ -162,7 +162,7 @@ header {
 }
 
 .bar_container {
-  width: 150px;
+  width: 70px;
 }
 
 .goal_chart {

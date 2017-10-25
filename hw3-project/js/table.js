@@ -86,6 +86,8 @@ class Table {
     //var columns = d3.select("#colHeaders").selectAll("td");
     tableInit(this.teamData, columns);
 
+    
+
     // ******* TODO: PART V *******
 
     // Set sorting callback for clicking on headers
