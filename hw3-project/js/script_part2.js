@@ -81,30 +81,26 @@ function columnHeadersInit() {
     });
 }
 
-function getNeededData(data){
+function getNeededData(data) {
   var res = [];
   var rowObj;
-  for(var i = 0; i < data.length; i++){
+  for (var i = 0; i < data.length; i++) {
     rowObj = {
       "Team": data[i].key,
-      "Goals": [ data[i].value["Goals Conceded"],  data[i].value["Goals Made"]],
+      "Goals": [data[i].value["Goals Conceded"], data[i].value["Goals Made"]],
       "Result": data[i].value["Result"]["label"],
-      "Wins":  data[i].value["Wins"],
+      "Wins": data[i].value["Wins"],
       "Losses": data[i].value["Losses"],
       "Total Games": data[i].value["TotalGames"],
+      "Games":  data[i].value["games"]
     };
     res.push(rowObj);
   }
   return res;
 }
 
-
-function tableInit(data, columns) {
-  // var table = d3.select('body').append('table')
-  // var thead = table.append('thead')
-  var self = this;
+function tableContentInit(data) {
   var tbody = d3.select("#matchTable").select("tbody");
-
   // create a row for each object in the data
   var rows = tbody.selectAll('tr')
     .data(getNeededData(data))
@@ -138,7 +134,10 @@ function tableInit(data, columns) {
       return d.value;
     });
 
-  columnHeadersInit();
+  specificDataRender();
+}
+
+function specificDataRender() {
   d3.selectAll(".simple").property("innerHTML", "");
   d3.selectAll(".simple")
     .append("div")
@@ -147,6 +146,11 @@ function tableInit(data, columns) {
       return d.value;
     });
 
+  goalChartsRender();
+  gameCountChartsRender();
+}
+
+function goalChartsRender() {
   d3.selectAll(".goalsCol").property('innerHTML', "");
   d3.selectAll(".goalsCol")
     .append("div")
@@ -190,8 +194,10 @@ function tableInit(data, columns) {
   d3.selectAll("circle")
     .classed("equal_score", function(d) {
       return d.value[0] == d.value[1] ? true : false;
-    })
+    });
+}
 
+function gameCountChartsRender() {
   d3.selectAll(".chartCol").property('innerHTML', "");
   d3.selectAll(".chartCol")
     .append("div")
@@ -220,11 +226,13 @@ function tableInit(data, columns) {
         return "hsl(180,50%," + ~~k + "%)";
       }
     });
-
 }
 
 
-
+function tableInit(data, columns) {
+  columnHeadersInit();
+  tableContentInit(data);
+}
 
 function findMaxVal(data) {
   var maxVal = 0;
