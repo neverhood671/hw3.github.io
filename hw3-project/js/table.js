@@ -166,9 +166,6 @@ class Table {
    *
    */
   updateList(data, startElementNumber) {
-    // ******* TODO: PART IV *******
-
-    //Only update list for aggregate clicks, not game clicks
     var k = startElementNumber + 1;
     var numOfRemovedRows = 0;
     while (data[k]["Team"].indexOf('x') == 0) {
@@ -184,7 +181,6 @@ class Table {
    */
   collapseList(data) {
     var k = 0;
-    // ******* TODO: PART IV *******
     while (data[k + 1] !== undefined) {
       if (data[k]["Team"].indexOf('x') == 0) {
         data.splice(k, 1);

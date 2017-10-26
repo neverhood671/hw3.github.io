@@ -170,11 +170,11 @@ header {
 }
 
 .made_goals {
-  fill: red;
+  fill: #cb181d;
 }
 
 .conceded_gols {
-  fill: blue;
+  fill: #034e7b;
 }
 
 .equal_score {

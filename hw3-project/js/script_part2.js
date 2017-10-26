@@ -19,7 +19,7 @@ d3.json('data/fifa-matches.json', function(error, data) {
 
     //Create a unique "id" field for each game
     csvData.forEach(function(d, i) {
-      d.id = d.Team + d.Opponent + i;
+      d.id = i;
     });
 
     //Create Tree Object
@@ -33,6 +33,7 @@ d3.json('data/fifa-matches.json', function(error, data) {
     table.updateTable();
   });
 });
+
 
 
 function getMaxNumOfSomething(teamData, something) {
@@ -168,6 +169,7 @@ function goalChartsRender() {
   d3.selectAll(".goal_chart")
     .append("circle")
     .classed("made_goals", true)
+    .classed("goal_circle", true)
     .attr("r", "8px")
     .attr("cx", function(d) {
       return (8 + d.value[0] * 8.6) + "px";
@@ -177,13 +179,14 @@ function goalChartsRender() {
   d3.selectAll(".goal_chart")
     .append("circle")
     .classed("conceded_gols", true)
+    .classed("goal_circle", true)
     .attr("r", "8px")
     .attr("cx", function(d) {
       return (8 + d.value[1] * 8.6) + "px";
     })
     .attr("cy", "15px");
 
-  d3.selectAll("circle")
+  d3.selectAll(".goal_circle")
     .classed("equal_score", function(d) {
       return d.value[0] == d.value[1] ? true : false;
     })
@@ -214,6 +217,7 @@ function gameGoalChartsRender() {
   d3.selectAll(".game_goal_chart")
     .append("circle")
     .classed("made_goals", true)
+    .classed("goal_circle", true)
     .attr("r", "8px")
     .attr("cx", function(d) {
       return (8 + d.value[0] * 8.6) + "px";
@@ -232,6 +236,7 @@ function gameGoalChartsRender() {
   d3.selectAll(".game_goal_chart")
     .append("circle")
     .classed("conceded_gols", true)
+    .classed("goal_circle", true)
     .attr("r", "8px")
     .attr("cx", function(d) {
       return (8 + d.value[1] * 8.6) + "px";
@@ -247,7 +252,7 @@ function gameGoalChartsRender() {
     })
     .attr("cy", "15px");
 
-  d3.selectAll("circle")
+  d3.selectAll(".goal_circle")
     .classed("equal_score", function(d) {
       return d.value[0] == d.value[1] ? true : false;
     });
