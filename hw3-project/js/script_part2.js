@@ -5,6 +5,7 @@
 */
 var sortFlag = 0;
 var columns = ["Team", "Goals", "Result", "Wins", "Losses", "Total Games"];
+var actualData;
 /**
  * Loads in the table information from fifa-matches.json
  */
@@ -92,7 +93,7 @@ function getNeededData(data) {
       "Wins": data[i].value["Wins"],
       "Losses": data[i].value["Losses"],
       "Total Games": data[i].value["TotalGames"],
-      "Games":  data[i].value["games"]
+      "Games": data[i].value["games"]
     };
     res.push(rowObj);
   }
@@ -101,11 +102,16 @@ function getNeededData(data) {
 
 function tableContentInit(data) {
   var tbody = d3.select("#matchTable").select("tbody");
+  tbody.selectAll('tr').remove();
   // create a row for each object in the data
+  actualData = data;
   var rows = tbody.selectAll('tr')
-    .data(getNeededData(data))
+    .data(actualData)
     .enter()
-    .append('tr');
+    .append('tr')
+    .attr("id", function(d) {
+      return d["Team"];
+    });
 
   // create a cell in each row for each column
   var cells = rows.selectAll('td')
@@ -204,10 +210,10 @@ function gameCountChartsRender() {
     .attr("class", "bar_container")
     .append("div").attr("class", "chart")
     .property('innerHTML', function(d) {
-      if (d.value > 0) {
-        return d.value;
-      } else {
+      if ((d.value == undefined) || (d.value <= 0)) {
         return "";
+      } else {
+        return d.value;
       }
     });
 
@@ -222,6 +228,9 @@ function gameCountChartsRender() {
   d3.selectAll(".chart")
     .style("background-color", function(d) {
       if (d) {
+        if (d.value == undefined){
+          d.value =0;
+        }
         var k = 100 - 80 * d.value / maxVal;
         return "hsl(180,50%," + ~~k + "%)";
       }
@@ -231,7 +240,7 @@ function gameCountChartsRender() {
 
 function tableInit(data, columns) {
   columnHeadersInit();
-  tableContentInit(data);
+  tableContentInit(getNeededData(data));
 }
 
 function findMaxVal(data) {
@@ -244,6 +253,34 @@ function findMaxVal(data) {
   return maxVal;
 }
 
+
+function mergeData(mainData, gameData, countryName) {
+  var mergedData = [];
+  var k = 0;
+  var i = 0;
+  while (mainData[k + 1] !== undefined) {
+    mergedData[i] = mainData[k];
+    i++;
+    if (mainData[k]["Team"] == countryName) {
+      for (var j = 0; j < gameData.length; j++) {
+        mergedData[i] = gameData[j];
+        i++;
+      }
+    }
+    k++;
+  }
+  return mergedData;
+}
+
+function removeGames(data,  startElementNumber) {
+  var k = startElementNumber + 1;
+  var numOfRemovedRows = 0;
+  while (data[k]["Team"].indexOf('x') == 0) {
+    data.splice(k, 1);
+    numOfRemovedRows++;
+  }
+  return numOfRemovedRows;
+}
 
 
 // // // ********************** HACKER VERSION ***************************

@@ -2,6 +2,7 @@ var width = 150;
 var height = 70;
 var margin = 35;
 
+
 var columns = ["Team", "Goals", "Round/Result", "Wins", "Losses", "Total Games"];
 /** Class implementing the table. */
 class Table {
@@ -60,13 +61,6 @@ class Table {
    */
   createTable() {
 
-    // ******* TODO: PART II *******
-
-    //Update Scale Domains
-
-    // Create the x axes for the goalScale.
-
-    //add GoalAxis to header of col 1.
     var svg = d3.select(".glyphicon").append("svg");
 
     svg.attr("width", width + 30)
@@ -83,17 +77,7 @@ class Table {
       .attr("transform", "translate(15," + margin + ")")
       .call(d3.axisTop(xScale));
 
-    //var columns = d3.select("#colHeaders").selectAll("td");
     tableInit(this.teamData, columns);
-
-    
-
-    // ******* TODO: PART V *******
-
-    // Set sorting callback for clicking on headers
-
-    // Clicking on headers should also trigger collapseList() and updateTable().
-
 
   }
 
@@ -102,23 +86,56 @@ class Table {
    * Updates the table contents with a row for each element in the global variable tableElements.
    */
   updateTable() {
-    // ******* TODO: PART III *******
-    //Create table rows
+    var self = this;
+    d3.selectAll("tr")
+      .on("click", function(d) {
 
-    //Append th elements for the Team Names
+        if (d["Team"].indexOf("x") == 0) {
+          //do nothing
+        } else {
 
-    //Append td elements for the remaining columns.
-    //Data for each cell is of the type: {'type':<'game' or 'aggregate'>, 'value':<[array of 1 or two elements]>}
 
-    //Add scores as title property to appear on hover
+          for (var j = 0; j < actualData.length; j++){
+            if (actualData[j]["Team"] == d["Team"]) {
+              break;
+            }
+          }
+          var canceledRows = removeGames(actualData, j);
 
-    //Populate cells (do one type of cell at a time )
+          if (canceledRows == 0) {
+            var newRowsData = [];
+            var rowData;
+            for (var k = 0; k < d["Games"].length; k++) {
+              var currentGame = d["Games"][k];
+              rowData = {
+                Team: "x" + currentGame.key,
+                Goals: [currentGame.value["Goals Conceded"], currentGame.value["Goals Made"]],
+                Result: currentGame.value["Result"]["label"]
+              }
+              newRowsData.push(rowData);
+            }
 
-    //Create diagrams in the goals column
+            var dataWithGamesInfo = mergeData(actualData, newRowsData, d["Team"]);
+            var tr = d3.select('#' + d["Team"]);
 
-    //Set the color of all games that tied to light gray
+            tableContentInit(dataWithGamesInfo);
 
-  };
+            self.updateTable();
+
+            d3.selectAll("td.teamCol").classed("additionalRowTeam", function(d) {
+              if (d.value.indexOf('x') == 0) {
+                return true;
+              } else {
+                return false;
+              }
+            });
+          } else {
+            tableContentInit(actualData);
+            self.updateTable();
+          }
+        }
+      });
+  }
 
   /**
    * Updates the global tableElements variable, with a row for each row to be rendered in the table.
