@@ -201,3 +201,8 @@ header {
 .game_goal_chart{
   height: 30px;
 }
+
+.selected_link {
+  stroke: red;
+  stroke-width: 4px;
+}

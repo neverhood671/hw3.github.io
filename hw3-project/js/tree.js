@@ -1,4 +1,5 @@
 /** Class implementing the tree view. */
+var treeData;
 class Tree {
   /**
    * Creates a Tree Object
@@ -14,7 +15,7 @@ class Tree {
    */
   createTree(flatData) {
 
-    var treeData = d3.stratify()
+    treeData = d3.stratify()
       .id(function(d) {
         return d.id;
       })
@@ -54,12 +55,15 @@ class Tree {
     // appends a 'group' element to 'svg'
     // moves the 'group' element to the top left margin
 
-    var g = d3.select("#tree").attr("transform","translate(100,100)");
+    var g = d3.select("#tree").attr("transform", "translate(100,100)");
 
     // adds the links between the nodes
     var link = g.selectAll(".link")
       .data(nodes.descendants().slice(1))
       .enter().append("path")
+      .attr("id", function(d) {
+        return "ID" + d.data.id;
+      })
       .attr("class", "link")
       .attr("d", function(d) {
         return "M" + d.y + "," + d.x +
@@ -83,12 +87,12 @@ class Tree {
     // adds the circle to the node
     node.append("circle")
       .attr("r", 10)
-      .style("fill", function(d){
-        if(d.data.data.WINS == 1) {
+      .style("fill", function(d) {
+        if (d.data.data.WINS == 1) {
           return "blue";
         } else {
           return "red";
-        }        
+        }
       });
 
     // adds the text to the node
@@ -114,6 +118,17 @@ class Tree {
   updateTree(row) {
     // ******* TODO: PART VII *******
 
+    var pathToHightlight = [];
+    treeData.each(function(d) {
+      if (d.data.TEAM == row.Team) {
+        pathToHightlight.push(d.id);
+      }
+    });
+    for (var k = 0; k < pathToHightlight.length; k++) {
+      d3.select("#ID" + pathToHightlight[k])
+        .classed("selected_link", true);
+    }
+
   }
 
   /**
@@ -121,7 +136,8 @@ class Tree {
    */
   clearTree() {
     // ******* TODO: PART VII *******
-
+    d3.selectAll(".selected_link")
+      .classed("selected_link", false);
     // You only need two lines of code for this! No loops!
   }
 }

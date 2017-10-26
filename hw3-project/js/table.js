@@ -112,12 +112,19 @@ class Table {
   updateTable() {
     var self = this;
     d3.selectAll("tr")
+      .on("mouseover", function(d){
+        if (d !== undefined){
+            self.tree.updateTree(d);
+        }
+      })
+      .on("mouseout", function(d){
+        self.tree.clearTree();
+      })
       .on("click", function(d) {
 
         if (d["Team"].indexOf("x") == 0) {
-          //do nothing
-        } else {
-
+          //do nothing if click on additional row
+        } else { //if click on general raw
           for (var j = 0; j < actualData.length; j++) {
             if (actualData[j]["Team"] == d["Team"]) {
               break;
@@ -126,6 +133,7 @@ class Table {
           var canceledRows = self.updateList(actualData, j);
 
           if (canceledRows == 0) {
+            //to show additional row
             var newRowsData = [];
             var rowData;
             for (var k = 0; k < d["Games"].length; k++) {
@@ -154,6 +162,7 @@ class Table {
             });
 
           } else {
+            //to hide additional row
             tableContentInit(actualData);
             self.updateTable();
           }
