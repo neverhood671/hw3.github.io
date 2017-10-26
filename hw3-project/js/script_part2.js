@@ -129,6 +129,9 @@ function tableContentInit(data) {
       if (d.column == "Wins" || d.column == "Losses" || d.column == "Total Games") {
         return "chartCol";
       } else if (d.column == "Goals") {
+        if (d.value[2] == "gameInfo") {
+          return "additionalRowGoals";
+        }
         return "goalsCol";
       } else if (d.column == "Team") {
         return "teamCol";
@@ -154,6 +157,7 @@ function specificDataRender() {
 
   goalChartsRender();
   gameCountChartsRender();
+  gameGoalChartsRender();
 }
 
 function goalChartsRender() {
@@ -200,7 +204,72 @@ function goalChartsRender() {
   d3.selectAll("circle")
     .classed("equal_score", function(d) {
       return d.value[0] == d.value[1] ? true : false;
+    })
+}
+
+function gameGoalChartsRender() {
+  d3.selectAll(".additionalRowGoals").property('innerHTML', "");
+  d3.selectAll(".additionalRowGoals")
+    .append("div")
+    .attr("class", "bar_container")
+    .append("svg").attr("class", "game_goal_chart");
+
+  d3.selectAll(".game_goal_chart")
+    .append("rect")
+    .style("fill", function(d) {
+      return d.value[0] < d.value[1] ? "#5faae3" : "#ff6666";
+    })
+    .attr("height", "4px")
+    .attr("width", function(d) {
+      return (8.6 * Math.abs(d.value[0] - d.value[1])) + "px";
+    })
+    .attr("x", function(d) {
+      var res = d.value[0] < d.value[1] ? d.value[0] : d.value[1];
+      return (8 + res * 8.6) + "px"
+    })
+    .attr("y", "13px");;
+
+  d3.selectAll(".game_goal_chart")
+    .append("circle")
+    .classed("made_goals", true)
+    .attr("r", "8px")
+    .attr("cx", function(d) {
+      return (8 + d.value[0] * 8.6) + "px";
+    })
+    .attr("cy", "15px");
+
+  d3.selectAll(".game_goal_chart")
+    .append("circle")
+    .style("fill", "white")
+    .attr("r", "5px")
+    .attr("cx", function(d) {
+      return (8 + d.value[0] * 8.6) + "px";
+    })
+    .attr("cy", "15px");
+
+  d3.selectAll(".game_goal_chart")
+    .append("circle")
+    .classed("conceded_gols", true)
+    .attr("r", "8px")
+    .attr("cx", function(d) {
+      return (8 + d.value[1] * 8.6) + "px";
+    })
+    .attr("cy", "15px");
+
+  d3.selectAll(".game_goal_chart")
+    .append("circle")
+    .style("fill", "white")
+    .attr("r", "5px")
+    .attr("cx", function(d) {
+      return (8 + d.value[1] * 8.6) + "px";
+    })
+    .attr("cy", "15px");
+
+  d3.selectAll("circle")
+    .classed("equal_score", function(d) {
+      return d.value[0] == d.value[1] ? true : false;
     });
+
 }
 
 function gameCountChartsRender() {
@@ -228,8 +297,8 @@ function gameCountChartsRender() {
   d3.selectAll(".chart")
     .style("background-color", function(d) {
       if (d) {
-        if (d.value == undefined){
-          d.value =0;
+        if (d.value == undefined) {
+          d.value = 0;
         }
         var k = 100 - 80 * d.value / maxVal;
         return "hsl(180,50%," + ~~k + "%)";
@@ -272,7 +341,7 @@ function mergeData(mainData, gameData, countryName) {
   return mergedData;
 }
 
-function removeGames(data,  startElementNumber) {
+function removeGames(data, startElementNumber) {
   var k = startElementNumber + 1;
   var numOfRemovedRows = 0;
   while (data[k]["Team"].indexOf('x') == 0) {

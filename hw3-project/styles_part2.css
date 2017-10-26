@@ -197,3 +197,7 @@ header {
 .additionalRowGoals {
 
 }
+
+.game_goal_chart{
+  height: 30px;
+}

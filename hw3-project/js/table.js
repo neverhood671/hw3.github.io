@@ -94,7 +94,6 @@ class Table {
           //do nothing
         } else {
 
-
           for (var j = 0; j < actualData.length; j++){
             if (actualData[j]["Team"] == d["Team"]) {
               break;
@@ -109,14 +108,14 @@ class Table {
               var currentGame = d["Games"][k];
               rowData = {
                 Team: "x" + currentGame.key,
-                Goals: [currentGame.value["Goals Conceded"], currentGame.value["Goals Made"]],
+                Goals: [currentGame.value["Goals Conceded"], currentGame.value["Goals Made"], "gameInfo"],
                 Result: currentGame.value["Result"]["label"]
               }
               newRowsData.push(rowData);
             }
 
             var dataWithGamesInfo = mergeData(actualData, newRowsData, d["Team"]);
-            var tr = d3.select('#' + d["Team"]);
+
 
             tableContentInit(dataWithGamesInfo);
 
@@ -129,6 +128,7 @@ class Table {
                 return false;
               }
             });
+
           } else {
             tableContentInit(actualData);
             self.updateTable();
