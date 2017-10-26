@@ -284,8 +284,8 @@ function gameCountChartsRender() {
   d3.selectAll(".chart")
     .style("background-color", function(d) {
       if (d) {
-        if (d.value == undefined) {
-          d.value = 0;
+        if (d.value == undefined || d.value == 0) {
+          return "rgba(0,0,0,0)";
         }
         var k = 100 - 80 * d.value / maxVal;
         return "hsl(180,50%," + ~~k + "%)";
