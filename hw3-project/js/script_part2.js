@@ -57,29 +57,11 @@ function getMaxNumOfSomething(teamData, something) {
 }
 
 function columnHeadersInit() {
-  var tbody = d3.select("#matchTable").select("tbody");
   var colHeaders = d3.selectAll("#colHeaders").selectAll("td");
 
   colHeaders.data(columns).enter();
 
   colHeaders.attr("class", "colHeaders");
-
-  d3.selectAll("#colHeaders").selectAll("td")
-    .on("click", function(header) {
-      var i = 0;
-      var neededElement;
-
-      tbody.selectAll("tr").sort(function(a, b) {
-        if (sortFlag <= 0) {
-          i = 1;
-          return d3.ascending(a[header], b[header]);
-        } else {
-          i = -1;
-          return d3.descending(a[header], b[header]);
-        }
-      });
-      sortFlag = i;
-    });
 }
 
 function getNeededData(data) {

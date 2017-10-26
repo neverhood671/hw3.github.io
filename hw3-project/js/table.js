@@ -61,6 +61,8 @@ class Table {
    */
   createTable() {
 
+    var self = this;
+
     var svg = d3.select(".glyphicon").append("svg");
 
     svg.attr("width", width + 30)
@@ -79,6 +81,28 @@ class Table {
 
     tableInit(this.teamData, columns);
 
+    var tbody = d3.select("#matchTable").select("tbody");
+    d3.selectAll("#colHeaders").selectAll("td")
+      .on("click", function(header) {
+        var i = 0;
+        var neededElement;
+
+        self.collapseList(actualData);
+        tableContentInit(actualData);
+        self.updateTable();
+
+        tbody.selectAll("tr").sort(function(a, b) {
+          if (sortFlag <= 0) {
+            i = 1;
+            return d3.ascending(a[header], b[header]);
+          } else {
+            i = -1;
+            return d3.descending(a[header], b[header]);
+          }
+        });
+        sortFlag = i;
+      });
+
   }
 
 
@@ -94,12 +118,12 @@ class Table {
           //do nothing
         } else {
 
-          for (var j = 0; j < actualData.length; j++){
+          for (var j = 0; j < actualData.length; j++) {
             if (actualData[j]["Team"] == d["Team"]) {
               break;
             }
           }
-          var canceledRows = removeGames(actualData, j);
+          var canceledRows = self.updateList(actualData, j);
 
           if (canceledRows == 0) {
             var newRowsData = [];
@@ -141,22 +165,33 @@ class Table {
    * Updates the global tableElements variable, with a row for each row to be rendered in the table.
    *
    */
-  updateList(i) {
+  updateList(data, startElementNumber) {
     // ******* TODO: PART IV *******
 
     //Only update list for aggregate clicks, not game clicks
-
+    var k = startElementNumber + 1;
+    var numOfRemovedRows = 0;
+    while (data[k]["Team"].indexOf('x') == 0) {
+      data.splice(k, 1);
+      numOfRemovedRows++;
+    }
+    return numOfRemovedRows;
   }
 
   /**
    * Collapses all expanded countries, leaving only rows for aggregate values per country.
    *
    */
-  collapseList() {
-
+  collapseList(data) {
+    var k = 0;
     // ******* TODO: PART IV *******
-
+    while (data[k + 1] !== undefined) {
+      if (data[k]["Team"].indexOf('x') == 0) {
+        data.splice(k, 1);
+      } else {
+        k++;
+      }
+    }
   }
-
 
 }
